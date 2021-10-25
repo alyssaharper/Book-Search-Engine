@@ -31,6 +31,29 @@ const resolvers = {
             const token = signToken(user);
             return { token, user };
         },
-        saveBook: async (parent, { bookData })
-    }
-}
+        saveBook: async (parent, { bookData }) => {
+            const updatedUser = await User.findOneAndUpdate(
+                { $addToSet: { savedBooks: { bookData }}},
+                {
+                    new: true, 
+                    runValidators: true,
+                }
+            );
+
+            return updatedUser;
+        },
+        deleteBook: async (parent, { book }) => {
+            const updatedUser = await User.findOneAndUpdate(
+                { $pull: { savedBooks: { bookId: book } } },
+                { new: true} 
+            );
+            if (!updatedUser) {
+                throw new AuthenticationError('Invalid User')
+            };
+
+            return updatedUser;
+        },
+    },
+};
+
+module.exports = resolvers

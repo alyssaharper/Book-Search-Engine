@@ -28,6 +28,7 @@ type Query {
 type Mutation {
     login(email: String!, password: String!): Auth
     saveBook(bookData: BookInput!): User
+    deleteBook(book: ID!): User
 }
 
 input BookInput {
@@ -38,4 +39,6 @@ input BookInput {
     link: String
     title: String
 }
-`
+`;
+
+module.exports = typeDefs;
